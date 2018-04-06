@@ -73,8 +73,9 @@
             });
             */
         });
-        function set() {
-            
+         function setLocationInput(lat, lng) {
+            $('input[name="lat"]').val(lat);
+            $('input[name="lng"]').val(lng);
         }
         
         var map, infoWindow;
@@ -104,17 +105,18 @@
                 //handleLocationError(true, infoWindow, map.getCenter());
             }
             map.setCenter(pos);
+            setLocationInput(pos.lat,pos.lng);
             var marker = new google.maps.Marker({
                 position: pos,
                 map: map,
                 draggable: true
             });
-            google.maps.event.addListener(marker, 'dragend', function(evt){
-                //evt.latLng.lat(),evt.latLng.lng()
-                console.log('drag');
+            google.maps.event.addListener(marker, 'dragend', function(event){
+                setLocationInput(event.latLng.lat(),event.latLng.lng());
             });
             google.maps.event.addListener(map, 'click', function(event) {
                 marker.setPosition(event.latLng);
+                setLocationInput(event.latLng.lat(),event.latLng.lng());
             });
 
             // Create the search box and link it to the UI element.
@@ -141,6 +143,7 @@
                         return;
                     }
                     marker.setPosition(place.geometry.location);
+                    setLocationInput(place.geometry.location.lat(),place.geometry.location.lng());
 
                     if (place.geometry.viewport) {
                         // Only geocodes have viewport.
